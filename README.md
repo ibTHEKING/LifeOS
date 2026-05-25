@@ -4,8 +4,8 @@ A multi-agent personal optimization system with a **Judge governance layer**.
 
 LifeOS is a university AI project built to demonstrate **constrained, verifiable multi-agent collaboration** — the opposite of "wire an LLM into every box and hope for the best."
 
-> Live demo: _add your `https://lifeos-<you>.streamlit.app` link here once deployed_
-> Code + docs page: _add your `https://<you>.github.io/lifeos` link here once deployed_
+> Live demo: _add your `https://lifeos-ibtheking.streamlit.app` link here once deployed_
+> Code + docs page: _add your `https://ibTHEKING.github.io/LifeOS` link here once deployed_
 
 ## What it does
 
@@ -95,7 +95,7 @@ The Judge enforces the contract on every output. Changing agent behaviour is a c
 ## Setup (local)
 
 ```bash
-git clone https://github.com/<you>/lifeos
+git clone https://github.com/ibTHEKING/LifeOS
 cd lifeos
 python -m pip install -r requirements.txt
 cp .env.example .env       # then paste your Gemini API key into .env
