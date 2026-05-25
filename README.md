@@ -164,11 +164,11 @@ LifeOS/
 - Not a financial advisor or trading bot.
 - Not a hallucination-free system — but every output's confidence is scored and surfaced, so users can decide what to trust.
 
-## Roadmap (post-deadline v2)
+## Roadmap
 
 - More agents from the original brief: Energy, Anti-Doomscrolling, Trading-Education
 - Real Google Calendar / Gmail OAuth (replaces manually pasted events)
-- n8n workflow wrapping the orchestrator for Telegram delivery (see `docs/n8n_integration.md`)
+- n8n workflow wrapping the orchestrator for daily Telegram delivery
 - Self-evaluation: collect Judge verdicts over N runs, plot rejection rate
 - Persistent memory: track job recommendations + learning tasks over time
 

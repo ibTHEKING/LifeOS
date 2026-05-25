@@ -146,10 +146,10 @@ The system logs every run (`logs/run_*.jsonl`). For a quantitative section in th
 
 These numbers go directly into the report.
 
-## 11. What would change in v2
+## 11. Roadmap
 
 - Add the remaining agents from the original brief: Energy, Anti-Doomscrolling, Trading-Education
 - Real Google Calendar / Gmail OAuth instead of pasted events
-- Telegram delivery via n8n (see `docs/n8n_integration.md`)
+- Daily delivery automation (Telegram, Slack, or webhook)
 - Cross-provider Judge (e.g. Claude judging Gemini)
 - Per-user persistent memory with provenance
