@@ -1,9 +1,87 @@
 # n8n Integration — Standalone Handoff Guide
 
-> **Read this on the laptop where n8n runs.**
+> **Read this on the laptop where n8n runs (your home laptop).**
 > This guide is fully self-contained. It does not assume Claude is available.
+> If you're reading this on GitHub: https://github.com/ibTHEKING/LifeOS/blob/main/docs/n8n_integration.md
 
-## What this gives you
+---
+
+## Section 0: Before You Begin — getting LifeOS onto the home laptop from zero
+
+Read this section ENTIRELY before touching n8n. It assumes you have nothing set up yet on this machine. Total time: ~10 minutes.
+
+### 0.1 What you should have on this machine before starting
+
+- **Git** (to clone the repo). Check: `git --version`. If not installed → https://git-scm.com/download/win
+- **Python 3.10 or newer**. Check: `python --version`. If not → https://www.python.org/downloads/ (during install, **check "Add Python to PATH"**).
+- **A text editor** for the `.env` file. VS Code, Notepad++, even Notepad works.
+- **n8n** already running in Docker on this machine (you already have this).
+- **A Gemini API key.** You have two options:
+  - **Option A — Reuse your existing key**: copy the value of `GEMINI_API_KEY` from the `.env` file on your other laptop (Bucharest dev laptop). Send it to yourself via a secure channel (e.g. Signal, encrypted note, USB).
+  - **Option B — Generate a fresh one (cleaner)**: go to https://aistudio.google.com, sign in, click "Get API key" → "Create API key". Free, no credit card, takes 30 seconds. You can have many keys on one Google account — no conflict.
+
+### 0.2 Clone the project
+
+Pick a folder where you want LifeOS to live (e.g. `C:\Projects` or `~/Documents`).
+
+```bash
+git clone https://github.com/ibTHEKING/LifeOS.git
+cd LifeOS
+```
+
+You now have the entire LifeOS source code, contracts, docs, tests — exactly what's on GitHub. Everything except `.env`, `logs/`, and `__pycache__` (those are gitignored on purpose).
+
+### 0.3 Install Python dependencies
+
+```bash
+python -m pip install -r requirements.txt
+```
+
+This installs Streamlit, google-genai, PyYAML, python-dotenv, requests, beautifulsoup4, pypdf. ~30 sec.
+
+### 0.4 Create `.env` with your API key
+
+Inside the `LifeOS` folder, create a new file called exactly `.env` (no extension) containing this single line:
+
+```
+GEMINI_API_KEY=AIzaSy...paste-your-real-key-here...
+```
+
+Don't add quotes around the key. Don't add spaces around the `=`. The `.env` file is in `.gitignore`, so it will never be committed by accident.
+
+### 0.5 Verify everything works locally before touching n8n
+
+```bash
+streamlit run app.py
+```
+
+Open http://localhost:8501 in your browser. You should see the LifeOS UI. Pick the "Ibrahim - normal day" persona, click "▶ Run LifeOS", wait ~30 seconds. You should see three cards populate (Job match, Today's plan, Productivity briefing).
+
+**If this works** → the agent logic + the API key + your dependencies all work on this machine. You are now ready for the n8n integration.
+
+**If something breaks**:
+| Error | Fix |
+|---|---|
+| `ModuleNotFoundError: No module named 'streamlit'` | Re-run `python -m pip install -r requirements.txt`. If still failing, try `py -m pip install -r requirements.txt` (Windows Python Launcher). |
+| `GEMINI_API_KEY is not set` | Your `.env` file isn't where you think it is, or it's named `.env.txt` instead of `.env`. Check with `dir .env*` (Windows) — should show exactly `.env`. |
+| `403 PERMISSION_DENIED` or `INVALID_ARGUMENT` from Gemini | Your API key is wrong or copied with extra whitespace. Regenerate at aistudio.google.com and paste fresh. |
+| Streamlit page loads but agents 429 / 503 | Free tier hiccup, just hit Rerun. If persistent, check that gemini-3.5-flash and gemini-3.1-flash-lite are still on the free tier (Google occasionally changes this). |
+
+### 0.6 Quick sanity test of the deterministic logic
+
+```bash
+python tests/test_basic.py
+```
+
+Should print `All basic tests passed.` — confirms the Judge's deterministic validator works.
+
+---
+
+You now have LifeOS running locally on the home laptop. Stop the Streamlit (Ctrl+C) — from here on we use it as a backend API for n8n, not via the browser UI.
+
+---
+
+## What this integration gives you
 
 A daily n8n workflow that:
 
@@ -17,21 +95,18 @@ You can use this without Telegram too — the same payload can be written to a f
 
 ---
 
-## 0. Plan of attack (read this first)
+## Plan of attack — order matters
 
 Total time: ~60-90 min if everything goes smoothly.
 
-Order matters:
+1. **[Quickstart minimal workflow](#quickstart-minimal-viable-workflow)** — prove the pipe works in 15 min, no Telegram or Calendar yet. Do this BEFORE the full workflow even if you're confident — it catches Docker networking bugs early.
+2. **[Expose LifeOS as an HTTP API](#2-expose-lifeos-as-an-http-api)** (assumes you already did Section 0)
+3. **[Set up the Telegram bot](#prereq-a-telegram-bot-setup-90-seconds)**
+4. **[Set up Google Calendar OAuth](#prereq-b-google-calendar-oauth-setup-5-min)**
+5. **[Build the full n8n workflow](#3-build-the-full-n8n-workflow)**
+6. **[Test it end-to-end](#4-test-end-to-end)**
 
-1. **[Quickstart minimal workflow](#quickstart-minimal-viable-workflow)** — prove the pipe works in 15 min, no Telegram or Calendar yet. Skip if you're confident.
-2. **[Run LifeOS locally on this laptop](#1-run-lifeos-locally-on-this-laptop)**
-3. **[Expose LifeOS as an HTTP API](#2-expose-lifeos-as-an-http-api)**
-4. **[Set up the Telegram bot](#prereq-a-telegram-bot-setup-90-seconds)**
-5. **[Set up Google Calendar OAuth](#prereq-b-google-calendar-oauth-setup-5-min)**
-6. **[Build the full n8n workflow](#3-build-the-full-n8n-workflow)**
-7. **[Test it end-to-end](#4-test-end-to-end)**
-
-If you only have time for half of it, do steps 1-3 and skip Telegram/Calendar. You'll still have an automation you can trigger from the n8n UI manually.
+If you only have time for half of it, do steps 1-2 and skip Telegram/Calendar. You'll still have an automation you can trigger from the n8n UI manually.
 
 ---
 
@@ -63,37 +138,10 @@ If you see that JSON, **everything else in this doc is just plumbing on top**. I
 
 ---
 
-## 1. Run LifeOS locally on this laptop
-
-You should have Python 3.10+ installed. If not, install it from python.org.
-
-```bash
-git clone https://github.com/ibTHEKING/LifeOS.git
-cd LifeOS
-python -m pip install -r requirements.txt
-```
-
-Create a `.env` file in the `LifeOS` folder with one line:
-
-```
-GEMINI_API_KEY=AIzaSy...your-key-from-aistudio.google.com...
-```
-
-(The `.env` is gitignored — that's why you have to recreate it on each machine. The key itself is the same as on your other laptop.)
-
-Verify it works:
-
-```bash
-streamlit run app.py
-```
-
-Visit `http://localhost:8501`. You should see the LifeOS UI. Try the "Ibrahim — normal day" persona once.
-
-If that works, **you have proven all the agent logic works on this machine**. Now you stop using Streamlit and start using the API.
-
----
-
 ## 2. Expose LifeOS as an HTTP API
+
+(If you haven't already done Section 0, do it now. You need a working local LifeOS before this step makes sense.)
+
 
 n8n needs an HTTP endpoint to POST to. Streamlit isn't that. We add a tiny FastAPI wrapper that shares the same agent code.
 
