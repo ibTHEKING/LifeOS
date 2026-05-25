@@ -1,0 +1,20 @@
+Ibrahim Ammar
+Bucharest, Romania | ibrahim.example@email.com
+
+EDUCATION
+- M.Sc. Data Science & Software Dev, in progress (1st year)
+- B.Sc. Business Intelligence
+- Coursework: Algorithms, Databases, Distributed Systems, AI
+
+EXPERIENCE
+- Personal project: real-time weather data pipeline (Python, multiple weather APIs, time-series analysis)
+- Personal project: trading bot connecting to live prediction-market APIs, backtested across 40+ cities
+- Built a multi-source data divergence monitor for production reliability
+
+SKILLS
+- Python (advanced), Git, Linux basics, systemd, REST APIs
+- Some exposure to: n8n, Docker, PostgreSQL
+- Familiar with prompt engineering and LLM API integration patterns
+
+LANGUAGES
+- Arabic (native), English (fluent), French (fluent)

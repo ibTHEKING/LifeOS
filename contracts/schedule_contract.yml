@@ -1,0 +1,66 @@
+name: schedule_agent
+description: >
+  Produces a realistic time-blocked daily plan that preserves the user's fixed
+  events, incorporates the Career Agent's task, and adapts to the user's mood
+  and energy. Never invents events.
+
+output_schema:
+  blocks:
+    type: array
+    required: true
+    min_items: 1
+    item_schema:
+      start:
+        type: string
+        required: true
+        pattern: "^([01][0-9]|2[0-3]):[0-5][0-9]$"
+      end:
+        type: string
+        required: true
+        pattern: "^([01][0-9]|2[0-3]):[0-5][0-9]$"
+      activity:
+        type: string
+        required: true
+        max_length: 200
+      category:
+        type: enum
+        required: true
+        values:
+          - fixed_event
+          - deep_work
+          - learning
+          - break
+          - exercise
+          - meal
+          - sleep
+          - admin
+  reasoning:
+    type: string
+    required: true
+    max_length: 1000
+  confidence:
+    type: enum
+    required: true
+    values: [low, medium, high]
+  career_task_included:
+    type: boolean
+    required: true
+
+forbidden_phrases:
+  - "you must"
+  - "you have to"
+  - "this is the optimal"
+  - "guaranteed"
+
+truthfulness_rules:
+  - "Never invent fixed events the user did not list."
+  - "Each block tagged `fixed_event` MUST correspond to one of the literal items in the user's TODAY'S FIXED EVENTS input."
+  - "Tasks from the CV or the career task go into `learning`, `deep_work`, or `admin` — not `fixed_event`."
+  - "Block times must be valid HH:MM 24-hour."
+  - "Within a single block, end MUST be after start unless the block crosses midnight (e.g. sleep 22:30 -> 07:00). At most ONE block may cross midnight."
+  - "Blocks must not overlap."
+  - "Total scheduled time must not exceed 24 hours."
+  - "If the Career task cannot be fit, set career_task_included=false and explain why in reasoning."
+
+escalation_rules:
+  - "If user mood/energy indicates burnout (low energy, poor sleep), reduce deep_work, add explicit breaks, and lower confidence."

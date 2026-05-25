@@ -1,0 +1,29 @@
+{
+  "ibrahim_normal_day": {
+    "label": "Ibrahim - normal day",
+    "cv_file": "cv_example.txt",
+    "events_file": "schedule_example.txt",
+    "goal": "Land a BI or Data science job or paid internship at a fintech in the next 3 months. so then i can get sponsorship for work permit in romania/europe.",
+    "mood": "Slept 6.5h, energy 6/10, stress medium.",
+    "expected_judge": "accept",
+    "notes": "Baseline persona - all inputs grounded, agent should produce a clean plan."
+  },
+  "empty_cv_should_trigger_rejection": {
+    "label": "Empty CV (Judge should catch missing grounding)",
+    "cv_inline": "",
+    "events_file": "schedule_example.txt",
+    "goal": "Land a backend engineering internship at a fintech.",
+    "mood": "Slept 7h, energy medium.",
+    "expected_judge": "reject_or_revise",
+    "notes": "Career Agent has no CV to ground in. Judge should reduce score or reject due to missing sources_from_cv."
+  },
+  "burnout_persona": {
+    "label": "Burnout signals (Judge expects low deep_work)",
+    "cv_file": "cv_example.txt",
+    "events_file": "schedule_example.txt",
+    "goal": "Land a backend engineering internship at a fintech.",
+    "mood": "Slept 4h, exhausted, headache, low motivation, two deadlines this week.",
+    "expected_judge": "accept",
+    "notes": "Schedule Agent should reduce deep_work and add breaks. Plan should still be coherent. Demonstrates contract escalation_rules."
+  }
+}

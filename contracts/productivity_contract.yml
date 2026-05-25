@@ -1,0 +1,56 @@
+name: productivity_agent
+description: >
+  Analyses the user's day plan, mood, and Career task, and produces a SHORT
+  productivity briefing: one focus rule for today, one procrastination risk,
+  one top-priority block, and a productivity score 1-10.
+
+  Stays small on purpose. The system is not a coach — it surfaces one or two
+  concrete observations the user can act on.
+
+output_schema:
+  focus_rule_today:
+    type: string
+    required: true
+    max_length: 200
+  procrastination_risk:
+    type: enum
+    required: true
+    values: [low, medium, high]
+  top_priority_block:
+    type: string
+    required: true
+    max_length: 200
+  productivity_score:
+    type: integer
+    required: true
+    min: 1
+    max: 10
+  rationale:
+    type: string
+    required: true
+    max_length: 600
+  confidence:
+    type: enum
+    required: true
+    values: [low, medium, high]
+
+forbidden_phrases:
+  - "you must"
+  - "you have to"
+  - "guaranteed"
+  - "this is the optimal"
+  - "as a certified"
+
+# Forbidden patterns (regex) — time references are easy to hallucinate.
+forbidden_patterns:
+  - "\\b\\d{1,2}:\\d{2}\\b"  # any HH:MM time mention
+
+truthfulness_rules:
+  - "Never fabricate events the user did not schedule. Only reference blocks present in the provided plan."
+  - "If the day has no deep_work blocks, do NOT claim the user is highly productive."
+  - "productivity_score must be a deliberate 1-10 integer; do not always return 7 or 8."
+  - "If mood indicates burnout (low sleep + high stress + low energy), procrastination_risk should be medium or high."
+
+escalation_rules:
+  - "If the day plan is missing or empty, return confidence=low, score=5, and rationale='Schedule input was empty.'"
+  - "If mood indicates burnout, lower the productivity_score and recommend lighter focus rules."

@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>LifeOS — Multi-Agent Personal Optimization</title>
+  <meta name="description" content="A multi-agent personal optimization system with a Judge governance layer. Real job search + day planning + productivity briefing. University AI project." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b0d12;
+      --bg2: #11141b;
+      --card: #161b25;
+      --line: #1f2533;
+      --text: #e6e8ee;
+      --muted: #9aa3b2;
+      --accent: #7c3aed;
+      --accent2: #22d3ee;
+      --good: #10b981;
+      --warn: #f59e0b;
+      --bad: #ef4444;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: 'Inter', system-ui, sans-serif; line-height: 1.55; }
+    a { color: var(--accent2); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    code, pre { font-family: 'JetBrains Mono', ui-monospace, monospace; }
+    .wrap { max-width: 1000px; margin: 0 auto; padding: 48px 24px 96px; }
+    header { display: flex; align-items: center; gap: 14px; margin-bottom: 8px; }
+    .logo { width: 48px; height: 48px; border-radius: 12px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      display: grid; place-items: center; font-weight: 700; font-size: 24px;
+    }
+    h1 { font-size: 44px; line-height: 1.1; margin: 16px 0 8px; }
+    .tagline { color: var(--muted); font-size: 18px; margin: 0 0 28px; max-width: 760px; }
+    .badges { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 32px; }
+    .badge { background: var(--bg2); border: 1px solid var(--line); padding: 4px 10px; border-radius: 999px; font-size: 12px; color: var(--muted); }
+    .cta { display: flex; gap: 12px; flex-wrap: wrap; margin: 16px 0 40px; }
+    .btn { display: inline-block; padding: 12px 18px; border-radius: 10px; font-weight: 600; font-size: 14px; border: 1px solid var(--line); background: var(--bg2); color: var(--text); }
+    .btn.primary { background: linear-gradient(135deg, var(--accent), #5b21b6); border-color: transparent; }
+    .btn:hover { transform: translateY(-1px); }
+    section { margin: 56px 0; }
+    h2 { font-size: 26px; margin: 0 0 16px; }
+    h3 { font-size: 18px; margin: 0 0 8px; color: var(--text); }
+    p { color: var(--muted); }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+    .card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 22px; }
+    .card p { margin: 6px 0 0; }
+    pre.diagram { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 22px; overflow-x: auto; font-size: 12.5px; line-height: 1.4; color: #c8d0e0; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); font-size: 14px; }
+    th { color: var(--muted); font-weight: 500; font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; }
+    .pill { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 11px; font-weight: 600; }
+    .pill.good { background: rgba(16,185,129,.15); color: var(--good); }
+    .pill.warn { background: rgba(245,158,11,.15); color: var(--warn); }
+    .pill.bad  { background: rgba(239,68,68,.15);  color: var(--bad); }
+    footer { color: var(--muted); font-size: 13px; margin-top: 60px; text-align: center; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+
+    <header>
+      <div class="logo">🧠</div>
+      <div>
+        <div style="font-size: 12px; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase;">University AI project</div>
+        <div style="font-size: 22px; font-weight: 700;">LifeOS</div>
+      </div>
+    </header>
+
+    <h1>Multi-agent personal optimization, with a Judge that actually says no.</h1>
+    <p class="tagline">
+      Three specialised AI agents collaborate to find real job matches, plan your day, and brief your focus. A separate Judge agent verifies every output against an explicit contract — and rejects fabrications, contradictions, and overconfident claims before they reach the user.
+    </p>
+
+    <div class="badges">
+      <span class="badge">Python</span>
+      <span class="badge">Streamlit</span>
+      <span class="badge">Gemini API</span>
+      <span class="badge">Real job search</span>
+      <span class="badge">Agentic contracts</span>
+      <span class="badge">LLM-as-judge</span>
+    </div>
+
+    <div class="cta">
+      <a class="btn primary" href="https://lifeos-USER.streamlit.app" id="demo-link">▶ Try the live demo</a>
+      <a class="btn" href="https://github.com/USER/lifeos" id="repo-link">View source on GitHub</a>
+    </div>
+
+    <section>
+      <h2>What it does</h2>
+      <div class="grid">
+        <div class="card">
+          <h3>1. Real job search</h3>
+          <p>Career Agent queries Arbeitnow + Remotive + RemoteOK + ejobs.ro (Romania) — plus optional Adzuna and LinkedIn — then picks one seniority-appropriate match. Returns an English overview and a link. You apply yourself.</p>
+        </div>
+        <div class="card">
+          <h3>2. Day plan</h3>
+          <p>Schedule Agent takes your fixed events, mood, sleep, and energy — and produces a realistic time-blocked plan with the recommended learning task placed sensibly.</p>
+        </div>
+        <div class="card">
+          <h3>3. Productivity briefing</h3>
+          <p>Productivity Agent reads the accepted plan and outputs one focus rule, your top-priority block, a procrastination-risk level, and a 1-10 productivity score.</p>
+        </div>
+        <div class="card">
+          <h3>4. Judge gates everything</h3>
+          <p>A separate Judge agent on a different model tier runs a deterministic contract check, then an LLM consistency check. Outputs that fabricate or contradict get rejected before reaching the user.</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Architecture</h2>
+      <pre class="diagram">
+       ┌──────────────────────────────────────────┐
+       │             Streamlit UI                 │
+       └──────────────────┬───────────────────────┘
+                          │
+                          ▼
+       ┌──────────────────────────────────────────┐
+       │              Orchestrator                │
+       └──┬──────────┬───────────────────┬────────┘
+          │          │                   │
+          ▼          ▼                   ▼
+   ┌──────────┐ ┌──────────┐    ┌────────────────┐
+   │ Job APIs │ │  Career  │ ─► │   Schedule     │
+   │ 6 free   │ │  Agent   │    │   Agent        │
+   │ sources  │ └────┬─────┘    └────────┬───────┘
+   └──────────┘      │                   │
+                     │                   ▼
+                     │            ┌──────────────┐
+                     │            │ Productivity │
+                     │            │ Agent        │
+                     │            └──────┬───────┘
+                     │                   │
+                     ▼                   ▼
+       ┌──────────────────────────────────────────┐
+       │            Judge (different model)       │
+       │   Contract + Consistency  →  verdict     │
+       └──────────────────────────────────────────┘</pre>
+    </section>
+
+    <section>
+      <h2>How the Judge decides</h2>
+      <table>
+        <thead><tr><th>Consistency score</th><th>Contract</th><th>Verdict</th></tr></thead>
+        <tbody>
+          <tr><td>≥ 0.70</td><td>passed</td><td><span class="pill good">accept</span></td></tr>
+          <tr><td>0.40 – 0.69</td><td>passed</td><td><span class="pill warn">revise</span></td></tr>
+          <tr><td>&lt; 0.40</td><td>passed</td><td><span class="pill bad">reject</span></td></tr>
+          <tr><td>n/a</td><td>failed</td><td><span class="pill bad">reject</span> (no LLM call spent)</td></tr>
+        </tbody>
+      </table>
+      <p style="margin-top: 18px;">The Judge runs on <strong>Gemini 3.5 Flash</strong> while the agents run on <strong>Gemini 3.1 Flash-Lite</strong>. Same-model self-grading is a known weakness in LLM-as-judge research, so the architecture explicitly avoids it.</p>
+    </section>
+
+    <section>
+      <h2>Design choices, defended</h2>
+      <div class="grid">
+        <div class="card">
+          <h3>3 agents, not six</h3>
+          <p>The original brief had six agents. We deliberately cut to three so each does its job under a real contract — depth over breadth.</p>
+        </div>
+        <div class="card">
+          <h3>Index-based job selection</h3>
+          <p>Career Agent returns an integer 1..N (or 0). The orchestrator fills the verbatim job details. Hallucinating a job is structurally impossible.</p>
+        </div>
+        <div class="card">
+          <h3>Contracts as YAML</h3>
+          <p>Behaviour rules live in config files the Judge loads at runtime — not hardcoded prompts. Easy to inspect, easy to extend.</p>
+        </div>
+        <div class="card">
+          <h3>Two-layer Judge</h3>
+          <p>Deterministic check first (free, instant, catches structural errors). LLM consistency check only when the deterministic pass succeeds.</p>
+        </div>
+        <div class="card">
+          <h3>Human-in-the-loop</h3>
+          <p>The system proposes; the user decides. No autonomous actions, no applications, no calendar writes, no irrecoverable side-effects.</p>
+        </div>
+        <div class="card">
+          <h3>Cheap by construction</h3>
+          <p>Free Gemini API tier + free Streamlit deploy + free GitHub Pages + free job APIs. Total runtime cost: zero.</p>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      LifeOS — university AI subject project · <a href="https://github.com/USER/lifeos">source</a>
+    </footer>
+  </div>
+</body>
+</html>

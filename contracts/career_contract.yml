@@ -1,0 +1,54 @@
+name: career_agent
+description: >
+  Given the user's CV, career goal, and a numbered list of real job listings,
+  picks ONE job by its index and writes a short English overview of it.
+  Also recommends a small learning task for today to help the user get closer
+  to that role (so the Schedule Agent has something to place in the day).
+
+  Returning an INDEX (not the job text) makes hallucination structurally
+  impossible — the orchestrator fills the verbatim job details from the
+  original listing.
+
+output_schema:
+  selected_job_index:
+    type: integer
+    required: true
+    min: 0
+    max: 100
+  job_summary_english:
+    type: string
+    required: true
+    max_length: 500
+  task:
+    type: string
+    required: true
+    max_length: 200
+  estimated_minutes:
+    type: integer
+    required: true
+    min: 15
+    max: 240
+  confidence:
+    type: enum
+    required: true
+    values: [low, medium, high]
+  sources_from_cv:
+    type: array
+    required: true
+
+forbidden_phrases:
+  - "guaranteed to"
+  - "will definitely"
+  - "as a certified"
+  - "I am an expert"
+  - "trust me"
+
+truthfulness_rules:
+  - "selected_job_index MUST be an integer 1..N (where N is the number of jobs provided), or 0 if no job is a reasonable match."
+  - "job_summary_english MUST be in English even if the original listing is in Romanian, German, or another language."
+  - "Do not fabricate companies, certifications, or details not present in the job listing or CV."
+  - "sources_from_cv MUST contain literal phrases from the CV. Empty list with confidence=low if no good match."
+
+escalation_rules:
+  - "If the jobs list is empty, return selected_job_index=0, confidence=low, task='Refresh job listings (no candidates available right now).'"
+  - "If no listing is a reasonable match, return selected_job_index=0 with confidence=low and explain in job_summary_english."
