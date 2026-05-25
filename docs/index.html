@@ -79,6 +79,9 @@
       <span class="badge">Python</span>
       <span class="badge">Streamlit</span>
       <span class="badge">Gemini API</span>
+      <span class="badge">FastAPI</span>
+      <span class="badge">n8n</span>
+      <span class="badge">Docker</span>
       <span class="badge">Real job search</span>
       <span class="badge">Agentic contracts</span>
       <span class="badge">LLM-as-judge</span>
@@ -184,6 +187,17 @@
           <p>Free Gemini API tier + free Streamlit deploy + free GitHub Pages + free job APIs. Total runtime cost: zero.</p>
         </div>
       </div>
+    </section>
+
+    <section>
+      <h2>n8n integration — daily Telegram delivery</h2>
+      <p>LifeOS ships with a FastAPI wrapper (<code>api.py</code>) so it can be called as an HTTP endpoint. An <strong>n8n</strong> workflow (Cron → Telegram ask → Google Calendar fetch → HTTP POST to LifeOS → Telegram reply) wraps the system into a daily morning automation. Runs on a self-hosted n8n in Docker — no third-party cloud orchestration needed.</p>
+      <pre class="diagram">
+   ┌──────────┐    ┌──────────┐    ┌────────────┐    ┌──────────┐    ┌──────────┐
+   │   Cron   │ ─► │ Telegram │ ─► │  Calendar  │ ─► │  LifeOS  │ ─► │ Telegram │
+   │  08:00   │    │  ask Q   │    │ fetch evts │    │   API    │    │ deliver  │
+   └──────────┘    └──────────┘    └────────────┘    └──────────┘    └──────────┘</pre>
+      <p>Full setup guide (self-contained, no Claude required): <a href="https://github.com/ibTHEKING/LifeOS/blob/main/docs/n8n_integration.md">docs/n8n_integration.md</a></p>
     </section>
 
     <footer>
