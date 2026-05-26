@@ -25,5 +25,14 @@
     "mood": "Slept 4h, exhausted, headache, low motivation, two deadlines this week.",
     "expected_judge": "accept",
     "notes": "Schedule Agent should reduce deep_work and add breaks. Plan should still be coherent. Demonstrates contract escalation_rules."
-  }
+  },
+  "emre_normal_day": {
+  "label": "Emre - normal day",
+  "cv_file": "emre_cv.txt",
+  "events_file": "emre_schedule.txt",
+  "goal": "Find a paid internship or entry-level opportunity in software, data science, or fintech in Romania or Europe within the next 3 months, while considering Erasmus status, residence permit limits, and possible work permit sponsorship.",
+  "mood": "Slept 6.5h, energy 6/10, stress medium.",
+  "expected_judge": "accept",
+  "notes": "Baseline persona for Emre as an Erasmus student in Romania - inputs should lead to a grounded plan considering academic schedule, visa/residence permit constraints, and career goals."
+}
 }
